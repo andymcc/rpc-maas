@@ -48,7 +48,7 @@ if which yum; then
 fi
 
 if [ "${CEPH_TEST}" = true]; then
-  tox -e ceph_func
+  tox -e func_ceph
 elif [ "${FUNCTIONAL_TEST}" = true ]; then
   tox -e bindep
   # Run maas functional tests
