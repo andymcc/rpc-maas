@@ -47,7 +47,9 @@ if which yum; then
     sudo yum -y install redhat-lsb-core epel-release
 fi
 
-if [ "${FUNCTIONAL_TEST}" = true ]; then
+if [ "${CEPH_TEST}" = true]; then
+  tox -e ceph_func
+elif [ "${FUNCTIONAL_TEST}" = true ]; then
   tox -e bindep
   # Run maas functional tests
   tox -e functional
