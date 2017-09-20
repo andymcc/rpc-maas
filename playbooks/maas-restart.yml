@@ -57,9 +57,40 @@
       until: _maas_agent_restart | success
       retries: 3
       delay: 2
+      failed_when: false
       when: >
         maas_restart_independent | default(true) | bool or
         maas_force_restart | default(false) | bool
+
+    - name: debug _maas_agent_restart
+      command: "systemctl status rackspace-monitoring-agent.service"
+      failed_when: false
+      register: systemctl_raxmon
+
+    - name: debug journalctl
+      command: "journalctl -xe"
+      failed_when: false
+      register: journal_raxmon
+
+    - name: print monitoring-config
+      command: "cat /etc/rackspace-monitoring-agent.cfg"
+      failed_when: false
+      register: raxmon_config
+
+    - name: print .raxrc
+      command: "cat ~/.raxrc"
+      failed_when: false
+      register: raxrc_config
+
+    - name: Debug vars
+      debug:
+        var: "{{ item }}"
+      with_items:
+        - raxrc_config
+        - raxmon_config
+        - journal_raxmon
+        - systemctl_raxmon
+        - _maas_agent_restart
 
   vars_files:
     - vars/main.yml
